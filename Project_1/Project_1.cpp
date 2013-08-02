@@ -49,7 +49,7 @@ int main(void) // main function
 	// setup GPS
 //	SENSOR_GPS_init();
 	
-	NMEA_getUTC();
+	
 	
 	// error code transmitted - USART_transmit_packet(BASE_ADDRESS, speed);
 	uint8_t waypoint = 0;

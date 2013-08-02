@@ -9,8 +9,8 @@
 #ifndef NMEA_H_
 #define NMEA_H_
 
-void NMEA_getUTC (void);
-
+float NMEA_getUTC (char NMEA_Text[]);
+float NMEA_getLatitude (char NMEA_Text[]);
 
 
 #endif /* NMEA_H_ */

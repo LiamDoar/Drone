@@ -6,33 +6,93 @@
  */ 
 
 #define NMEA_test "$GPGGA,123519.000,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47" // for testing
-#include <avr/io.h>
+#define GPGGA_TIME_POISTION 1
+#define GPGGA_LAT_POISTION 2
 
-void NMEA_getUTC (void)
+#include <avr/io.h>
+#include <stdlib.h>
+
+float NMEA_getUTC (char NMEA_Text[])
 {
-	char NMEA_messagetest[80] = "$GPGGA,123519.000,4807.038,N,01131.000,E,1,08,0.9,545.4,M,46.9,M,,*47";
-	int UTC = 0;
-	uint8_t i = 8;
-	// get UTC time [hhmmss.sss]
-	while(NMEA_messagetest[i] != ',');
-	{
-		UTC = (NMEA_messagetest[i]);
-		i++;
+	uint8_t count = 0;
+	uint8_t n = 0;
+	uint8_t i = 0;
+	char pBuff[10];
 	
+	while (!(count == GPGGA_TIME_POISTION))
+	{
+		if (NMEA_Text[n] == ',')
+		{
+			count++;
+		}
+		
+		n++;
 	}
 	
-
+	while (!(NMEA_Text[(n+i)] == ','))
+	{
+		pBuff[i] = NMEA_Text[n+i];
+		i=i++;
+	}
+	pBuff[i] = '\0';
+	
+	return (atof(pBuff));
 }
+
+float NMEA_getLatitude (char NMEA_Text[])
+{
+	//4807.038,N
+	uint8_t count = 0;
+	uint8_t n = 0;
+	uint8_t i = 0;
+	uint8_t degress = 0;
+	float minutes = 0.0;
+	float latatude = 0.0;
+	char pBuff[10];
+	while (!(count == GPGGA_LAT_POISTION))
+	{
+		if (NMEA_Text[n] == ',')
+		{
+			count++;
+		}
+		
+		n++;
+	}
+	
+	while (!(i==2))
+	{
+		pBuff[i] = NMEA_Text[n+i];
+		i=i++;
+	}
+	pBuff[i] = '\0';
+	degress = atoi(pBuff);
+	
+	while (!(NMEA_Text[(n+i)]==','))
+	{
+		pBuff[i-2] = NMEA_Text[n+i];
+		i=i++;
+	}
+	pBuff[i-2] = '\0';
+	minutes = atof(pBuff);
+	
+	latatude = (degress + (minutes/60));
+	
+	if (NMEA_Text[n+i+1] = 'S')
+	{
+		latatude = latatude * -1;
+	}
+	
+	return latatude;
+}
+	
+
+
 
 void NMEA_getValid (void)
 {
 	
 }
 
-void NMEA_getlatitude (void)
-{
-	
-}
 
 void NMEA_getNS (void)
 {
