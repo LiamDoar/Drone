@@ -2,23 +2,36 @@
  * navigation.cpp
  *
  * Created: 11/07/2013 10:24:44 p.m.
- *  Author: Liam
+ *  Author: Liam & Josh
  */ 
+#include "stdlib.h"
 #include "config.h"
+#include "math.h"
 
 #include <avr/io.h>
 #include "navigation.h"
 #include "sensor.h"
+
+#define PI 3.14159265
 
 void NAVIGATION_update(void)
 {
 		
 }
 
-uint8_t NAVIGATION_getDistance(uint8_t current_location, uint8_t next_WP)
+uint8_t NAVIGATION_getDistance(uint8_t current_location_x,uint8_t current_location_y, uint8_t next_WP_x,uint8_t next_WP_y)
 {
+	uint8_t distance;
+	uint8_t side_one;
+	uint8_t side_two;
+	
+// Need example of GPS output so can calculate length and width	
+	side_one = abs(current_location_x - next_WP_x);
+	side_two = abs(current_location_y - next_WP_y);
+	
 // Pythagoras theory a2 + b2 = c2 (absolute)
-	return 1;
+	distance = round(sqrt(pow(side_one, 2) + pow(side_two, 2)));
+	return distance;
 	
 }
 
@@ -31,10 +44,19 @@ uint8_t NAVIGATION_getCurrentHeading(void)
 
 
 
-uint8_t NAVIGATION_getDirection(uint8_t current_location, uint8_t next_WP)
+uint8_t NAVIGATION_getDirection(uint8_t current_location_x,uint8_t current_location_y, uint8_t next_WP_x,uint8_t next_WP_y)
 {
+	uint8_t angle;
+	uint8_t adj;
+	uint8_t hyp;
+	
+	// Need example of GPS output so can calculate length and width
+	hyp = NAVIGATION_getDistance(current_location_x, current_location_y, next_WP_x, next_WP_y);
+	adj = abs(current_location_y - next_WP_y);
+		
 	// Pythagoras theory angle cos a/h
-	return 1;
+	angle = round(acos(adj/hyp) * 180.0 / PI); // convert to degrees
+	return angle;
 }
 
 uint8_t NAVIGATION_nextWaypoint(uint8_t current_waypoint)
